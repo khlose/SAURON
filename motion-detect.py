@@ -3,7 +3,8 @@ import argparse
 import datetime
 import imutils
 import time
-import cv2
+import cv3
+import numpy
  
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
