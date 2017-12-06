@@ -3,7 +3,7 @@ import argparse
 import datetime
 import imutils
 import time
-import cv3
+import cv2
 import numpy
  
 # construct the argument parser and parse the arguments
@@ -15,6 +15,7 @@ args = vars(ap.parse_args())
 # if the video argument is None, then we are reading from webcam
 if args.get("video", None) is None:
 	camera = cv2.VideoCapture(0)
+	#caprint("Tryting to grab camera")
 	time.sleep(0.25)
  
 # otherwise, we are reading from a video file
@@ -54,7 +55,7 @@ while True:
 	# dilate the thresholded image to fill in holes, then find contours
 	# on thresholded image
 	thresh = cv2.dilate(thresh, None, iterations=2)
-	(cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+	(_,	cnts, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 		cv2.CHAIN_APPROX_SIMPLE)
  
 	# loop over the contours
