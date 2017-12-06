@@ -17,13 +17,17 @@ if __name__ == '__main__':
 
     # Webcam footage (or video)
     video = cv2.VideoCapture(0)
+    #for netcat??
+    #video = cv2.VideoCapture("/dev/stdin")
+    #for gstreamer
+    #video = cv2.VideoCapture("tcpclientsrc host=192.168.1.125 port=5777 ! gdpdepay ! rtph264depay ! avdec_h264 ! autoconvert ! appsink sync=false")
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
     # LOOP
     while True:
         # Check first frame
         ok, frame = video.read()
-
+        print ok
         # Grayscale footage
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
