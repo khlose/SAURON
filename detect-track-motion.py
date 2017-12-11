@@ -2,6 +2,7 @@
 import cv2
 import time
 import imutils
+import pathlib
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -19,20 +20,26 @@ if __name__ == '__main__':
     video = cv2.VideoCapture(0)
     #for netcat??
     #video = cv2.VideoCapture("/dev/stdin")
-    #for gstreamer
-    #video = cv2.VideoCapture("tcpclientsrc host=192.168.1.125 port=5777 ! gdpdepay ! rtph264depay ! avdec_h264 ! autoconvert ! appsink sync=false")
+    #video = cv2.VideoCapture("/home/schwin/GitHub/SAURON/fifo264")
+
+    #this one works for a bit? it got cut off though
+    #pc: nc -lvp 55555 > temp.txt
+    #pi: run netcat-server script
+    #pc: python detect- with the following line uncommented
+    #video = cv2.VideoCapture("/home/schwin/GitHub/SAURON/temp.txt")
+
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
     # LOOP
     while True:
         # Check first frame
         ok, frame = video.read()
-        print ok
+
         # Grayscale footage
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
-
+    
         # Check for background
         if back is None:
             # Set background to current frame
