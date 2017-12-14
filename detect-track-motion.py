@@ -12,6 +12,7 @@ class threadedCamera:
         (self.grabbed,self.frame) = self.stream.read()
         self.back = None
         self.gray = None
+        self.cnts = None
         self.stopped = False
 
     def start(self):
@@ -74,6 +75,7 @@ if __name__ == '__main__':
     # LOOP
     while True:
         # Check first frame (blocking I/O)
+        print "check1"
 
         if multithread:
             frame = threadedVid.read()
@@ -108,7 +110,8 @@ if __name__ == '__main__':
                 _, cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             # Check each contour
-            if len(cnts) != 0:
+            if cnts != None and len(cnts) != 0:
+                print "Not None"
                 # If the contour is big enough
 
                 # Set largest contour to first contour
