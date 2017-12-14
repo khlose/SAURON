@@ -76,6 +76,7 @@ class threadeMotionTracker():
         self.h = h
 
     def updateStatus(self,status):
+        print "updating status"
         self.status = status
 
     def update(self):
@@ -118,7 +119,6 @@ if __name__ == '__main__':
     # LOOP
     while True:
         # Check first frame (blocking I/O)
-        print "check1"
 
         frame = threadedVid.read()
 
