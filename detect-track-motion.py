@@ -66,6 +66,7 @@ class threadeMotionTracker():
         self.tracker.init(GlobalFrame,bbox)
 
     def start(self):
+        self.stop = False
         Thread(target=self.update,args=()).start()
         return self
 
@@ -80,7 +81,7 @@ class threadeMotionTracker():
         self.status = status
 
     def update(self):
-        if not self.stop:
+        if self.stop == False:
             if(self.status == 'tracking'):
                 print "tracking"
                 self.tracker.update(GlobalFrame)
