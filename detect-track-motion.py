@@ -3,27 +3,28 @@ import cv2
 from threading import Thread
 import imutils
 
-#change to disable multithread
+# change to disable multithread
 multithread = True
 
+
 class threadedCamera:
-    def __init__(self,src = 0):
+    def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
-        (self.grabbed,self.frame) = self.stream.read()
+        (self.grabbed, self.frame) = self.stream.read()
         self.back = None
         self.gray = None
         self.cnts = None
         self.stopped = False
 
     def start(self):
-        Thread(target=self.update,args=()).start()
+        Thread(target=self.update, args=()).start()
         return self
 
     def update(self):
         while True:
             if self.stopped:
                 return
-            (self.grabbed,self.frame)=self.stream.read()
+            (self.grabbed, self.frame) = self.stream.read()
             self.erodeDilate()
 
     def read(self):
@@ -60,13 +61,10 @@ if __name__ == '__main__':
 
     # Background for motion detection
     back = None
-    # An MIL tracker for when we find motion
-    # tracker = cv2.TrackerKCF_create ()
-    tracker = cv2.Tracker_create("KCF")
 
     # Webcam footage (or video) (blocking I/O)
     if multithread:
-        threadedVid = threadedCamera(src = 0).start()
+        threadedVid = threadedCamera(src=0).start()
     else:
         video = cv2.VideoCapture(0)
     (x, y, w, h) = (0, 0, 0, 0)
@@ -86,7 +84,7 @@ if __name__ == '__main__':
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         gray = cv2.GaussianBlur(gray, (21, 21), 0)
-    
+
         # Check for background
         if back is None:
             # Set background to current frame
@@ -135,16 +133,8 @@ if __name__ == '__main__':
                     if y < top: top = y
                     if h > bottom: bottom = h
                     # create bounding box
-                bbox = (int(left),int(top),int(right),int(bottom))
-                ok = tracker.init(frame,bbox)
+                bbox = (int(left), int(top), int(right), int(bottom))
                 status = 'tracking'
-
-
-        # If we are tracking
-        #if status == 'tracking':
-        if status == 'tracking':
-            # Update our tracker
-            ok, bbox = tracker.update(frame)
 
         # If we have been tracking for more than a few seconds
         if idle_time >= 10:
@@ -155,14 +145,9 @@ if __name__ == '__main__':
 
             # Reset background, frame, and tracker
             back = None
-            tracker = None
             ok = None
 
             threadedVid.reset()
-
-
-            # Recreate tracker
-            tracker = cv2.Tracker_create("KCF")
 
         # Incriment timer
         idle_time += 1
