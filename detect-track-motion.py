@@ -60,7 +60,7 @@ class threadedCamera:
 class threadeMotionTracker():
     def __init__(self,type="KCF"):
         self.tracker = cv2.Tracker_create("KCF")
-        self.status = 'idle'
+        self.status = 'motion'
 
     def initTracker(self,bbox):
         self.tracker.init(GlobalFrame,bbox)
