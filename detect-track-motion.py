@@ -60,6 +60,9 @@ if __name__ == '__main__':
 
     # Background for motion detection
     back = None
+    # An MIL tracker for when we find motion
+    # tracker = cv2.TrackerKCF_create ()
+    tracker = cv2.Tracker_create("KCF")
 
     # Webcam footage (or video) (blocking I/O)
     if multithread:
@@ -133,10 +136,15 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left),int(top),int(right),int(bottom))
+                ok = tracker.init(frame,bbox)
                 status = 'tracking'
 
 
-
+        # If we are tracking
+        #if status == 'tracking':
+        if status == 'tracking':
+            # Update our tracker
+            ok, bbox = tracker.update(frame)
 
         # If we have been tracking for more than a few seconds
         if idle_time >= 10:
@@ -147,10 +155,14 @@ if __name__ == '__main__':
 
             # Reset background, frame, and tracker
             back = None
+            tracker = None
             ok = None
 
             threadedVid.reset()
 
+
+            # Recreate tracker
+            tracker = cv2.Tracker_create("KCF")
 
         # Incriment timer
         idle_time += 1
