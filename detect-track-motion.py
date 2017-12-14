@@ -164,14 +164,6 @@ if __name__ == '__main__':
                 status = 'tracking'
                 threadedTracker.updateStatus('tracking')
 
-
-        # If we are tracking
-        #if status == 'tracking':
-        if status == 'tracking':
-            # Update our tracker
-            #ok, bbox = threadedTracker.update(frame)
-
-
         # If we have been tracking for more than a few seconds
         if idle_time >= 10:
             # Reset to motion
