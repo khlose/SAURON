@@ -62,8 +62,8 @@ class threadeMotionTracker():
         self.tracker = cv2.Tracker_create("KCF")
         self.status = 'idle'
 
-    def initTracker(self,frame,bbox):
-        self.tracker.init(frame,bbox)
+    def initTracker(self,bbox):
+        self.tracker.init(GlobalFrame,bbox)
 
     def start(self):
         Thread(target=self.update,args=()).start()
@@ -81,7 +81,6 @@ class threadeMotionTracker():
     def update(self):
         if not self.stop:
             if(self.status == 'tracking'):
-                print "update"
                 self.tracker.update(GlobalFrame)
 
     def stop(self):
@@ -90,6 +89,12 @@ class threadeMotionTracker():
     def release(self):
         self.stop()
 
+
+class showStream:
+    def __init__(self):
+        self.stop = True
+    def start(self):
+        self.stop = False
 
 
 if __name__ == '__main__':
@@ -101,7 +106,7 @@ if __name__ == '__main__':
     # Background for motion detection
     back = None
     threadedTracker = threadeMotionTracker(type="KCF")
-
+    threadedTracker.start()
 
     # Webcam footage (or video) (blocking I/O)
     threadedVid = threadedCamera(src = 0).start()
@@ -139,7 +144,6 @@ if __name__ == '__main__':
 
             # Check each contour
             if cnts != None and len(cnts) != 0:
-                print "Not None"
                 # If the contour is big enough
 
                 # Set largest contour to first contour
@@ -164,7 +168,7 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left),int(top),int(right),int(bottom))
-                threadedTracker.initTracker(frame,bbox)
+                threadedTracker.initTracker(bbox)
                 status = 'tracking'
                 threadedTracker.updateStatus('tracking')
 
