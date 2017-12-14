@@ -5,7 +5,7 @@ import imutils
 
 # change to disable multithread
 multithread = True
-
+GlobalFrame = None
 
 class threadedCamera:
     def __init__(self, src=0):
@@ -25,6 +25,7 @@ class threadedCamera:
             if self.stopped:
                 return
             (self.grabbed, self.frame) = self.stream.read()
+            GlobalFrame = self.frame
             self.erodeDilate()
 
     def read(self):
@@ -51,7 +52,8 @@ class threadedCamera:
 
     def reset(self):
         self.back = None
-
+    def release(self):
+        self.stream.release()
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -157,5 +159,5 @@ if __name__ == '__main__':
             break
 
 # QUIT
-video.release()
+threadedCamera.release()
 cv2.destroyAllWindows()
