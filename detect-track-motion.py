@@ -75,6 +75,9 @@ class threadeMotionTracker():
         self.w = w
         self.h = h
 
+    def updateStatus(self,status):
+        self.status = status
+
     def update(self):
         if not self.stop:
             if(self.status == 'tracking'):
