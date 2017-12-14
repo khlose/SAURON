@@ -1,7 +1,32 @@
 # OpenCV for tracking/display
 import cv2
-import time
+from threading import Thread
 import imutils
+
+multithread=False
+
+class threadedCamera:
+    def __init__(self,src = 0):
+        self.stream = cv2.VideoCapture(src)
+        (self.grabbed,self.frame) = self.stream.read()
+
+        self.stopped = False
+
+    def start(self):
+        Thread(target=self.update,args=()).start()
+        return self
+
+    def update(self):
+        while True:
+            if self.stopped:
+                return
+            (self.grabbed,self.frame)=self.stream.read()
+
+    def read(self):
+        return self.frame
+
+    def stop(self):
+        self.stopped = True
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -15,16 +40,23 @@ if __name__ == '__main__':
     # tracker = cv2.TrackerKCF_create ()
     tracker = cv2.Tracker_create("KCF")
 
-    # Webcam footage (or video)
-    video = cv2.VideoCapture(0)
+    # Webcam footage (or video) (blocking I/O)
+    if multithread:
+        threadedVid = threadedCamera(src = 0).start()
+    else:
+        video = cv2.VideoCapture(0)
 
 
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
     # LOOP
     while True:
-        # Check first frame
-        ok, frame = video.read()
+        # Check first frame (blocking I/O)
+
+        if multithread:
+            frame = threadedVid.read()
+        else:
+            ok, frame = video.read()
 
         # Grayscale footage
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
