@@ -81,6 +81,7 @@ class threadeMotionTracker():
     def update(self):
         if not self.stop:
             if(self.status == 'tracking'):
+                print "tracking"
                 self.tracker.update(GlobalFrame)
 
     def stop(self):
@@ -145,7 +146,7 @@ if __name__ == '__main__':
             # Check each contour
             if cnts != None and len(cnts) != 0:
                 # If the contour is big enough
-
+                print "not None"
                 # Set largest contour to first contour
                 largest = 0
                 left = 2000
