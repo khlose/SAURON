@@ -5,6 +5,7 @@ import imutils
 
 #change to disable multithread
 multithread = True
+GlobalFrame = None
 
 class threadedCamera:
     def __init__(self,src = 0):
@@ -24,6 +25,7 @@ class threadedCamera:
             if self.stopped:
                 return
             (self.grabbed,self.frame)=self.stream.read()
+            GlobalFrame = self.frame
             self.erodeDilate()
 
     def read(self):
@@ -50,6 +52,40 @@ class threadedCamera:
 
     def reset(self):
         self.back = None
+    def release(self):
+        self.stop()
+        self.stream.release()
+
+
+class threadeMotionTracker():
+    def __init__(self,type="KCF"):
+        self.tracker = cv2.Tracker_create("KCF")
+        self.status = 'idle'
+
+    def initTracker(self,frame,bbox):
+        self.tracker.init(frame,bbox)
+
+    def start(self):
+        Thread(target=self.update,args=()).start()
+        return self
+
+    def updateCoord(self,x,y,w,h):
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def update(self):
+        if not self.stop:
+            if(self.status == 'tracking'):
+                self.tracker.update(GlobalFrame)
+
+    def stop(self):
+        self.stop = True
+
+    def release(self):
+        self.stop()
+
 
 
 if __name__ == '__main__':
@@ -60,15 +96,12 @@ if __name__ == '__main__':
 
     # Background for motion detection
     back = None
-    # An MIL tracker for when we find motion
-    # tracker = cv2.TrackerKCF_create ()
-    tracker = cv2.Tracker_create("KCF")
+    threadedTracker = threadeMotionTracker(type="KCF")
+
 
     # Webcam footage (or video) (blocking I/O)
-    if multithread:
-        threadedVid = threadedCamera(src = 0).start()
-    else:
-        video = cv2.VideoCapture(0)
+    threadedVid = threadedCamera(src = 0).start()
+
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
 
@@ -77,10 +110,8 @@ if __name__ == '__main__':
         # Check first frame (blocking I/O)
         print "check1"
 
-        if multithread:
-            frame = threadedVid.read()
-        else:
-            ok, frame = video.read()
+        frame = threadedVid.read()
+
 
         # Grayscale footage
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -99,15 +130,8 @@ if __name__ == '__main__':
 
             # Create a threshold to exclude minute movements
             # threshold(src treshold,max value,)
-            if multithread:
-                cnts = threadedVid.readContour()
-            else:
-                thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
-                # Dialate threshold to further reduce error
-                thresh2 = cv2.erode(thresh2, None, iterations=2)
-                thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
-                # Check for contours in our threshold
-                _, cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cnts = threadedVid.readContour()
+
 
             # Check each contour
             if cnts != None and len(cnts) != 0:
@@ -136,33 +160,33 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left),int(top),int(right),int(bottom))
-                ok = tracker.init(frame,bbox)
+                threadedTracker.initTracker(frame,bbox)
                 status = 'tracking'
+                threadedTracker.updateStatus('tracking')
 
 
         # If we are tracking
         #if status == 'tracking':
         if status == 'tracking':
             # Update our tracker
-            ok, bbox = tracker.update(frame)
+            #ok, bbox = threadedTracker.update(frame)
+
 
         # If we have been tracking for more than a few seconds
         if idle_time >= 10:
             # Reset to motion
             status = 'motion'
+            threadedTracker.updateStatus('motion')
             # Reset timer
             idle_time = 0
 
             # Reset background, frame, and tracker
             back = None
-            tracker = None
+            threadedTracker = None
             ok = None
-
             threadedVid.reset()
-
-
             # Recreate tracker
-            tracker = cv2.Tracker_create("KCF")
+            threadedTracker = threadeMotionTracker(type="KCF")
 
         # Incriment timer
         idle_time += 1
@@ -172,5 +196,6 @@ if __name__ == '__main__':
             break
 
 # QUIT
-video.release()
+threadedVid.release()
+threadedTracker.release()
 cv2.destroyAllWindows()
