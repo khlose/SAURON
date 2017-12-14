@@ -103,7 +103,7 @@ if __name__ == '__main__':
                 cv2.rectangle(frame,p1,p2,(0,0,255),10)
 
         #Show our webcam
-        cv2.imshow("Camera",frame)
+        #cv2.imshow("Camera",frame)
 
 
         # If we have been tracking for more than a few seconds
