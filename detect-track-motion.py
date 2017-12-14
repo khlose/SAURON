@@ -22,12 +22,33 @@ class threadedCamera:
             if self.stopped:
                 return
             (self.grabbed,self.frame)=self.stream.read()
+            self.erodeDilate()
 
     def read(self):
         return self.frame
 
     def stop(self):
         self.stopped = True
+
+    def erodeDilate(self):
+        if self.back == None:
+            self.back = self.gray
+        self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
+        # Blur footage to prevent artifacts
+        self.gray = cv2.GaussianBlur(gray, (21, 21), 0)
+        thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
+        # Dialate threshold to further reduce error
+        thresh2 = cv2.erode(thresh2, None, iterations=2)
+        thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
+        # Check for contours in our threshold
+        _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    def readContour(self):
+        return self.cnts
+
+    def reset(self):
+        self.back = None
+
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -75,15 +96,15 @@ if __name__ == '__main__':
 
             # Create a threshold to exclude minute movements
             # threshold(src treshold,max value,)
-            thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
-
-            # Dialate threshold to further reduce error
-
-            thresh2 = cv2.erode(thresh2, None, iterations=2)
-            thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
-
-            # Check for contours in our threshold
-            _, cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if multithread:
+                cnts = threadedVid.readContour()
+            else:
+                thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
+                # Dialate threshold to further reduce error
+                thresh2 = cv2.erode(thresh2, None, iterations=2)
+                thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
+                # Check for contours in our threshold
+                _, cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
             # Check each contour
             if len(cnts) != 0:
@@ -132,6 +153,9 @@ if __name__ == '__main__':
             back = None
             tracker = None
             ok = None
+
+            threadedVid.reset()
+
 
             # Recreate tracker
             tracker = cv2.Tracker_create("KCF")
