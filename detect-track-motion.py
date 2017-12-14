@@ -159,5 +159,6 @@ if __name__ == '__main__':
             break
 
 # QUIT
-threadedCamera.release()
+threadedVid.release()
+threadedVid.stop()
 cv2.destroyAllWindows()
