@@ -2,7 +2,6 @@
 import cv2
 import time
 import imutils
-import pathlib
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -18,15 +17,7 @@ if __name__ == '__main__':
 
     # Webcam footage (or video)
     video = cv2.VideoCapture(0)
-    #for netcat??
-    #video = cv2.VideoCapture("/dev/stdin")
-    #video = cv2.VideoCapture("/home/schwin/GitHub/SAURON/fifo264")
 
-    #this one works for a bit? it got cut off though
-    #pc: nc -lvp 55555 > temp.txt
-    #pi: run netcat-server script
-    #pc: python detect- with the following line uncommented
-    #video = cv2.VideoCapture("/home/schwin/GitHub/SAURON/temp.txt")
 
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
@@ -101,7 +92,6 @@ if __name__ == '__main__':
 
         # If we are tracking
         #if status == 'tracking':
-        #print(x,y,w,h)
         if status == 'tracking':
             # Update our tracker
             ok, bbox = tracker.update(frame)
