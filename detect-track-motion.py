@@ -81,6 +81,7 @@ class threadeMotionTracker():
     def update(self):
         if not self.stop:
             if(self.status == 'tracking'):
+                print "update"
                 self.tracker.update(GlobalFrame)
 
     def stop(self):
