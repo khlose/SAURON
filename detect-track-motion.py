@@ -127,7 +127,7 @@ if __name__ == '__main__':
                 #       =
                 #      +y
 
-                # For each contour
+                # For each contour (unit in pixel??)
                 for i in range(len(cnts)):
                     (x, y, w, h) = cv2.boundingRect(cnts[i])
                     if x < left: left = x
@@ -136,6 +136,7 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left), int(top), int(right), int(bottom))
+                print left,top,right,bottom
                 status = 'tracking'
 
         # If we have been tracking for more than a few seconds
