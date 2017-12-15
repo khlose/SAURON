@@ -98,19 +98,14 @@ def moveToAlign(left,top,right,bottom):
     vertical_diff = top - 240
     degVertical = vertical_diff*5.15/42
     #42 pixels = 5.15 deg
-    negFlagH = 1
-    negFlagV = 1
-    if horizontal_diff < 0:
-        negFlagH = -1
-    if vertical_diff < 0:
-        negFlagV = -1
-    print "pixeldiff (H,V)" + str(horizontal_diff) +"," + str(vertical_diff)
 
-    print "H:" + str(degHorizontal)
-    print "V:" + str(degVertical)
+    #print "pixeldiff (H,V)" + str(horizontal_diff) +"," + str(vertical_diff)
 
-    moveHorizontal(negFlagH*degHorizontal)
-    moveVertical(negFlagV*degVertical)
+    #print "H:" + str(degHorizontal)
+    #print "V:" + str(degVertical)
+
+    moveHorizontal(degHorizontal)
+    moveVertical(degVertical)
 
     return
 
@@ -124,10 +119,10 @@ def calcDistanceFromLaser(frame):
     return
 
 def moveHorizontal(angle):
-    print "angle before add: " + str(angle)
+    #print "angle before add: " + str(angle)
     angle = angle + 85
     pwm_val = 2.835*angle + 135
-    print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
+    #print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
     pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
     return
 
