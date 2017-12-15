@@ -84,7 +84,6 @@ class threadedI2C:
 
 
 
-
 class threadedCamera:
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
@@ -119,6 +118,7 @@ class threadedCamera:
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(self.gray, (21, 21), 0)
 
+        frame_delta = cv2.absdiff(self.back,self.gray)
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
         thresh2 = cv2.erode(thresh2, None, iterations=2)
@@ -291,4 +291,5 @@ if __name__ == '__main__':
 # QUIT
 threadedVid.release()
 threadedVid.stop()
+threadedI2C.stop()
 cv2.destroyAllWindows()
