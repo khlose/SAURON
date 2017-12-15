@@ -2,7 +2,9 @@
 import cv2
 from threading import Thread
 import imutils
-import numpy as np
+import RPi.GPIO as GPIO
+import Adafruit_PCA9685
+
 # change to disable multithread
 multithread = True
 GlobalFrame = None
@@ -82,13 +84,16 @@ def calcDistanceFromLaser(frame):
     _,_,r = cv2.split(frame)
     (minVal,maxVal,minLoc,maxLoc) = cv2.minMaxLoc(r)
     xCoord = maxLoc[0]
-
+    #change this
+    moveVertical((xCoord-320)*5.15/42)
     return
 
 def moveHorizontal(angle):
+
     return
 
 def moveVertical(angle):
+
     return
 
 
