@@ -81,8 +81,9 @@ class threadedCamera:
         thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2)
+        _, _, _, max_loc = cv2.minMaxLoc(thresh2)
         cv2.circle(thresh2, max_loc, 5, (255, 0, 0), 2)
+        print "max loc : " + str(max_loc)
         cv2.imshow("thres", thresh2)
 
     def readContour(self):
@@ -90,7 +91,7 @@ class threadedCamera:
 
     def read_left(self):
 
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2  , mask=mask)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2)
         return
 
     def reset(self):
