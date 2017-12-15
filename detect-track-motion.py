@@ -73,7 +73,7 @@ class threadedCamera:
             self.back = self.gray
         self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
-        self.gray = cv2.GaussianBlur(gray, (21, 21), 0)
+        self.gray = cv2.GaussianBlur(self.gray, (21, 21), 0)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
