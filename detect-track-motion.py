@@ -42,7 +42,7 @@ GPIO.setup(26,GPIO.OUT)
 class threadedI2C:
     def __init__(self):
         self.stopped = False
-        self.TargetAcquiredgetAcquired = False
+        self.TargetAcquired = False
         self.rotation = 375
         self.left = 0
 
@@ -58,21 +58,21 @@ class threadedI2C:
             if self.TargetAcquired:
                 print "target Acquired, moving to " + str(self.rotation)
                 pwm.set_pwm(0, 0, self.rotation)
-                self.TargetAcquiredgetAcquired = False
+                self.TargetAcquired = False
 
     def setMoveFlag(self,acquired = False):
-        self.TargetAcquiredgetAcquired = acquired
+        self.TargetAcquired = acquired
 
     def setTarget(self,rot):
         self.rotation = rot
 
     def moveOrigin(self):
         self.rotation = 375
-        self.TargetAcquiredgetAcquired = True
+        self.TargetAcquired = True
 
     def stop(self):
         self.stopped = True
-        self.TargetAcquiredgetAcquired = False
+        self.TargetAcquired = False
         self.rotation = 375
 
     def set4Coord(self,left):
