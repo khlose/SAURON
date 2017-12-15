@@ -26,6 +26,10 @@ class threadedCamera:
                 return
             (self.grabbed, self.frame) = self.stream.read()
             GlobalFrame = self.frame
+            print "width"
+            print self.stream.get(3)
+            print "height"
+            print self.stream.get(4)
             self.erodeDilate()
 
     def read(self):
@@ -46,6 +50,7 @@ class threadedCamera:
         thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.imshow("thresh",thresh2)
 
     def readContour(self):
         return self.cnts
@@ -54,6 +59,13 @@ class threadedCamera:
         self.back = None
     def release(self):
         self.stream.release()
+
+def moveToAlign(left,top,right,bottom):
+
+
+def calcDistanceFromLaser(frame):
+
+
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -75,7 +87,7 @@ if __name__ == '__main__':
     # LOOP
     while True:
         # Check first frame (blocking I/O)
-        print "check1"
+        #print "check1"
 
         if multithread:
             frame = threadedVid.read()
@@ -136,8 +148,10 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left), int(top), int(right), int(bottom))
-                print left,top,right,bottom
+                moveToAlign(left,top,right,bottom)
+
                 status = 'tracking'
+
 
         # If we have been tracking for more than a few seconds
         if idle_time >= 10:
