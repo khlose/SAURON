@@ -6,6 +6,7 @@ import imutils
 # change to disable multithread
 multithread = True
 GlobalFrame = None
+GlobalGray = None
 
 class threadedCamera:
     def __init__(self, src=0):
@@ -40,13 +41,23 @@ class threadedCamera:
         self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+        GlobalGray = self.gray
+
+        blurred = cv2.GaussianBlur(gray, (11, 11), 0)
+        thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
+        thresh = cv2.erode(thresh, None, iterations=2)
+        thresh = cv2.dilate(thresh, None, iterations=4)
+
+        cv2.imshow("BrightSpot",thresh)
+
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
         thresh2 = cv2.erode(thresh2, None, iterations=2)
         thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.imshow("thresh",thresh2)
+        #cv2.imshow("thresh",thresh2)
 
     def readContour(self):
         return self.cnts
@@ -165,7 +176,7 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left), int(top), int(right), int(bottom))
-                moveToAlign(left,top,right,bottom)
+                #moveToAlign(left,top,right,bottom)
 
                 status = 'tracking'
 
