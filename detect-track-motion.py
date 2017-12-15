@@ -134,7 +134,7 @@ def moveVertical(angle):
     return
 
 def moveOrigin():
-    pwm.set_pwm(0, 0, 330)
+    pwm.set_pwm(0, 0, 375)
     #pwm.set_pwm(1, 0, 375)
     return
 
