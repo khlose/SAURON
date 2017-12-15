@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
 
         # If we have been tracking for more than a few seconds
-        if idle_time >= 15:
+        if idle_time >= 10:
             # Reset to motion
             status = 'motion'
             # Reset timer
