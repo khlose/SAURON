@@ -29,14 +29,58 @@ def set_servo_pulse(channel, pulse):
 pwm.set_pwm_freq(60)
 #0 servos
 serv1=375
-serv2=375
 pwm.set_pwm(0,0,serv1)
-pwm.set_pwm(1,0,serv2)
+
 
 #GPIO Setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(20,GPIO.OUT)
 GPIO.setup(26,GPIO.OUT)
+
+
+
+class threadedI2C:
+    def __init__(self):
+        self.stopped = False
+        self.TargetAcquiredgetAcquired = False
+        self.rotation = 375
+        self.left = 0
+
+
+    def start(self):
+        Thread(target=self.monitorI2C(),args=()).start()
+        return self
+
+    def monitorI2C(self):
+        while True:
+            if self.stopped:
+                return
+            if self.TargetAcquired:
+                print "target Acquired, moving to " + str(self.rotation)
+                pwm.set_pwm(0, 0, self.rotation)
+                self.TargetAcquiredgetAcquired = False
+
+    def setMoveFlag(self,acquired = False):
+        self.TargetAcquiredgetAcquired = acquired
+
+    def setTarget(self,rot):
+        self.rotation = rot
+
+    def moveOrigin(self):
+        self.rotation = 375
+        self.TargetAcquiredgetAcquired = True
+
+    def stop(self):
+        self.stopped = True
+        self.TargetAcquiredgetAcquired = False
+        self.rotation = 375
+
+    def set4Coord(self,left):
+        self.left = left
+        horizontal_diff = left - 320
+        degHorizontal = int(math.ceil((((horizontal_diff * 5.15 / 42) + 85)*2.835) + 95))
+        self.setTarget(degHorizontal)
+        self.TargetAcquiredgetAcquired = True
 
 
 
@@ -98,15 +142,9 @@ def moveToAlign(left,top,right,bottom):
     degHorizontal = horizontal_diff*5.15/42
     vertical_diff = top - 240
     degVertical = vertical_diff*5.15/42
-    #42 pixels = 5.15 deg
 
-    #print "pixeldiff (H,V)" + str(horizontal_diff) +"," + str(vertical_diff)
-
-    #print "H:" + str(degHorizontal)
-    #print "V:" + str(degVertical)
 
     moveHorizontal(degHorizontal)
-    #moveVertical(degVertical)
 
     return
 
@@ -156,7 +194,9 @@ if __name__ == '__main__':
         video = cv2.VideoCapture(0)
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
-    moveOrigin()
+    servo = threadedI2C().start()
+    servo.moveOrigin()
+    #moveOrigin()
     # LOOP
     while True:
         # Check first frame (blocking I/O)
@@ -222,7 +262,8 @@ if __name__ == '__main__':
                     # create bounding box
                 if(left > 25 and top > 25):
                     bbox = (int(left), int(top), int(right), int(bottom))
-                    moveToAlign(left,top,right,bottom)
+                    #moveToAlign(left,top,right,bottom)
+                    servo.set4Coord(left)
                     #calcDistanceFromLaser(frame)
                     status = 'tracking'
 
