@@ -39,8 +39,6 @@ GPIO.setup(20,GPIO.OUT)
 GPIO.setup(26,GPIO.OUT)
 
 
-
-
 class threadedCamera:
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)
@@ -69,12 +67,14 @@ class threadedCamera:
         self.stopped = True
 
     def erodeDilate(self):
-        if self.back == None:
-            self.back = self.gray
+
         self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(self.gray, (21, 21), 0)
 
+        if self.back == None:
+            self.back = self.gray
+        frame_delta = cv2.absdiff(self.back,self.gray)
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
         thresh2 = cv2.erode(thresh2, None, iterations=2)
@@ -96,17 +96,9 @@ def moveToAlign(left,top,right,bottom):
 
     horizontal_diff = left - 320
     degHorizontal = horizontal_diff*5.15/42
-    vertical_diff = top - 240
-    degVertical = vertical_diff*5.15/42
-    #42 pixels = 5.15 deg
 
-    #print "pixeldiff (H,V)" + str(horizontal_diff) +"," + str(vertical_diff)
-
-    #print "H:" + str(degHorizontal)
-    #print "V:" + str(degVertical)
 
     moveHorizontal(degHorizontal)
-    #moveVertical(degVertical)
 
     return
 
@@ -124,7 +116,7 @@ def moveHorizontal(angle):
     angle = angle + 85
     pwm_val = 2.835*angle + 95
     #print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
-    print "detecting Target Writing : " str(int(math.ceil(pwm_val)))
+    print "detecting Target Writing : " + str(int(math.ceil(pwm_val)))
     pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
     return
 
@@ -132,7 +124,12 @@ def moveVertical(angle):
     angle = angle + 85
     pwm_val = 2.8235*angle + 135
     #print "pwm_val vert= " + str(int(math.ceil(pwm_val)))
-    pwm.set_pwm(1, 0, int(math.ceil(pwm_val)))
+    int_pwm = int(math.ceil(pwm_val))
+    if int_pwm < 210:
+        int_pwm = 210
+    if int_pwm > 420:
+        int_pwm =420
+    pwm.set_pwm(1, 0, int_pwm)
     return
 
 def moveOrigin():
