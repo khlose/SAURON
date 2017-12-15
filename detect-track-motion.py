@@ -81,7 +81,6 @@ class threadedCamera:
         thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.imshow("thresh",thresh2)
 
     def readContour(self):
         return self.cnts
@@ -93,7 +92,7 @@ class threadedCamera:
 
 def moveToAlign(left,top,right,bottom):
     #width 640 height 480
-    print "detecting Target"
+
     horizontal_diff = left - 320
     degHorizontal = horizontal_diff*5.15/42
     vertical_diff = top - 240
@@ -124,6 +123,7 @@ def moveHorizontal(angle):
     angle = angle + 85
     pwm_val = 2.835*angle + 95
     #print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
+    print "detecting Target Writing : " str(int(math.ceil(pwm_val)))
     pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
     return
 
@@ -219,7 +219,7 @@ if __name__ == '__main__':
                     if y < top: top = y
                     if h > bottom: bottom = h
                     # create bounding box
-                if(left > 25 && top > 25):
+                if(left > 25 and top > 25):
                     bbox = (int(left), int(top), int(right), int(bottom))
                     moveToAlign(left,top,right,bottom)
                     #calcDistanceFromLaser(frame)
