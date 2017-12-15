@@ -234,7 +234,7 @@ if __name__ == '__main__':
             ok = None
 
             threadedVid.reset()
-            moveOrigin():
+            moveOrigin()
         # Incriment timer
         idle_time += 1
 
