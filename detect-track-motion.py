@@ -219,10 +219,11 @@ if __name__ == '__main__':
                     if y < top: top = y
                     if h > bottom: bottom = h
                     # create bounding box
-                bbox = (int(left), int(top), int(right), int(bottom))
-                moveToAlign(left,top,right,bottom)
-                #calcDistanceFromLaser(frame)
-                status = 'tracking'
+                if(left > 25 && top > 25):
+                    bbox = (int(left), int(top), int(right), int(bottom))
+                    moveToAlign(left,top,right,bottom)
+                    #calcDistanceFromLaser(frame)
+                    status = 'tracking'
 
 
         # If we have been tracking for more than a few seconds
