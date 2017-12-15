@@ -124,6 +124,7 @@ def calcDistanceFromLaser(frame):
     return
 
 def moveHorizontal(angle):
+    print "angle before add: " + str(angle)
     angle = angle + 85
     pwm_val = 2.835*angle + 135
     print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
