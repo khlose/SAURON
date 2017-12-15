@@ -93,6 +93,7 @@ class threadedCamera:
 
 def moveToAlign(left,top,right,bottom):
     #width 640 height 480
+    print "detecting Target"
     horizontal_diff = left - 320
     degHorizontal = horizontal_diff*5.15/42
     vertical_diff = top - 240
