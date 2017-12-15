@@ -104,6 +104,10 @@ def moveToAlign(left,top,right,bottom):
         negFlagH = -1
     if vertical_diff < 0:
         negFlagV = -1
+    print "pixeldiff (H,V)" + horizontal_diff +"," + vertical_diff
+
+    print "H:" + degHorizontal
+    print "V:" + degVertical
 
     moveHorizontal(negFlagH*degHorizontal)
     moveVertical(negFlagV*degVertical)
@@ -152,7 +156,7 @@ if __name__ == '__main__':
         video = cv2.VideoCapture(0)
     (x, y, w, h) = (0, 0, 0, 0)
     dilated = None
-
+    moveOrigin()
     # LOOP
     while True:
         # Check first frame (blocking I/O)
@@ -192,7 +196,7 @@ if __name__ == '__main__':
 
             # Check each contour
             if cnts != None and len(cnts) != 0:
-                print "Not None"
+
                 # If the contour is big enough
 
                 # Set largest contour to first contour
