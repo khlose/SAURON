@@ -118,8 +118,9 @@ class threadedCamera:
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(self.gray, (21, 21), 0)
 
-        print len(self.back)
-        print len(self.gray)
+        print self.back == None
+        print self.gray == None
+
 
         delta = cv2.absdiff(self.back,self.gray)
         thresh2 = cv2.threshold(delta, 25, 255, cv2.THRESH_BINARY)[1]
