@@ -49,7 +49,7 @@ class threadedCamera:
         thresh = cv2.erode(thresh, None, iterations=2)
         thresh = cv2.dilate(thresh, None, iterations=4)
 
-        cv2.imshow("BrightSpot",thresh)
+        cv2.imshow("BrightSpot",gray)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
