@@ -2,7 +2,6 @@
 import cv2
 from threading import Thread
 import imutils
-import numpy as np
 
 # change to disable multithread
 multithread = True
@@ -49,17 +48,9 @@ class threadedCamera:
         GlobalGray = self.gray
 
         hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
-        lower_red = np.array([0, 50, 50])
-        upper_red = np.array([10, 255, 255])
-        mask0 = cv2.inRange(hsv, lower_red, upper_red)
+        mask = cv2.inRange(hsv,redlower,redupper)
 
-        # upper mask (170-180)
-        lower_red = np.array([170, 50, 50])
-        upper_red = np.array([180, 255, 255])
-        mask1 = cv2.inRange(hsv, lower_red, upper_red)
-        mask = mask0 + mask1
-        output_img = cv2.bitwise_and(hsv, hsv, mask=mask)
-
+        cv2.imshow("hsv",hsv)
 
         blurred = cv2.GaussianBlur(gray, (11, 11), 0)
         thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
@@ -68,7 +59,7 @@ class threadedCamera:
 
 
         #cv2.imshow("gray",gray)
-        cv2.imshow("filtered",output_img)
+        #cv2.imshow("filtered",thresh)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
