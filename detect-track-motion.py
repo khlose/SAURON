@@ -61,10 +61,10 @@ class threadedCamera:
         self.stream.release()
 
 def moveToAlign(left,top,right,bottom):
-
+    return
 
 def calcDistanceFromLaser(frame):
-
+    return 
 
 
 if __name__ == '__main__':
