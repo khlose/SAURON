@@ -112,14 +112,13 @@ class threadedCamera:
         self.stopped = True
 
     def erodeDilate(self):
-        if self.back == None:
-            self.back = self.gray
+
         self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(self.gray, (21, 21), 0)
 
-        print self.back == None
-        print self.gray == None
+        if self.back == None:
+            self.back = self.gray
 
 
         delta = cv2.absdiff(self.back,self.gray)
