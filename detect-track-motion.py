@@ -7,6 +7,9 @@ import imutils
 multithread = True
 GlobalFrame = None
 GlobalGray = None
+redlower = (17,15,100)
+redupper = (50,56,200)
+
 
 class threadedCamera:
     def __init__(self, src=0):
@@ -44,12 +47,20 @@ class threadedCamera:
 
         GlobalGray = self.gray
 
+        hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv,redlower,redupper)
+        mask = cv2.erode(mask, None, iterations=2)
+        mask = cv2.dilate(mask, None, iterations=2)
+
+
         blurred = cv2.GaussianBlur(gray, (11, 11), 0)
         thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
         thresh = cv2.erode(thresh, None, iterations=2)
         thresh = cv2.dilate(thresh, None, iterations=4)
 
-        cv2.imshow("BrightSpot",gray)
+
+        cv2.imshow("gray",gray)
+        cv2.imshow("filtered",mask)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
