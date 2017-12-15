@@ -222,7 +222,7 @@ if __name__ == '__main__':
                     if y < top: top = y
                     if h > bottom: bottom = h
                     # create bounding box
-                if(left > 25 and top > 25):
+                if(left > 0 and top > 0):
                     bbox = (int(left), int(top), int(right), int(bottom))
                     moveToAlign(left,top,right,bottom)
                     #calcDistanceFromLaser(frame)
@@ -230,7 +230,7 @@ if __name__ == '__main__':
 
 
         # If we have been tracking for more than a few seconds
-        if idle_time >= 10:
+        if idle_time >= 15:
             # Reset to motion
             status = 'motion'
             # Reset timer
