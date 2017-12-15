@@ -1,14 +1,45 @@
 # OpenCV for tracking/display
 import cv2
 from threading import Thread
+from __future__ import division
 import imutils
 import RPi.GPIO as GPIO
 import Adafruit_PCA9685
+import math
 
 # change to disable multithread
 multithread = True
 GlobalFrame = None
 GlobalGray = None
+
+pwm = Adafruit_PCA9685.PCA9685()
+servo_min = 150  # Min pulse length out of 4096
+servo_max = 600  # Max pulse length out of 4096
+# Helper function to make setting a servo pulse width simpler.
+def set_servo_pulse(channel, pulse):
+    pulse_length = 1000000    # 1,000,000 us per second
+    pulse_length //= 60       # 60 Hz
+    print('{0}us per period'.format(pulse_length))
+    pulse_length //= 4096     # 12 bits of resolution
+    print('{0}us per bit'.format(pulse_length))
+    pulse *= 1000
+    pulse //= pulse_length
+    pwm.set_pwm(channel, 0, pulse)
+# Set frequency to 60hz, good for servos.
+pwm.set_pwm_freq(60)
+#0 servos
+serv1=375
+serv2=375
+pwm.set_pwm(0,0,serv1)
+pwm.set_pwm(1,0,serv2)
+
+#GPIO Setup
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(20,GPIO.OUT)
+GPIO.setup(26,GPIO.OUT)
+
+
+
 
 class threadedCamera:
     def __init__(self, src=0):
@@ -89,13 +120,21 @@ def calcDistanceFromLaser(frame):
     return
 
 def moveHorizontal(angle):
-
+    angle = angle + 85
+    pwm_val = 2.835*angle + 135
+    pwm.set_pwm(0, 0, math.ceil(pwm_val))
     return
 
 def moveVertical(angle):
-
+    angle = angle + 85
+    pwm_val = 2.8235*angle + 135
+    pwm.set_pwm(1, 0, math.ceil(pwm_val))
     return
 
+def moveOrigin():
+    pwm.set_pwm(0, 0, 375)
+    pwm.set_pwm(1, 0, 375)
+    return
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -195,7 +234,7 @@ if __name__ == '__main__':
             ok = None
 
             threadedVid.reset()
-
+            moveOrigin():
         # Incriment timer
         idle_time += 1
 
