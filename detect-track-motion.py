@@ -122,13 +122,13 @@ def calcDistanceFromLaser(frame):
 def moveHorizontal(angle):
     angle = angle + 85
     pwm_val = 2.835*angle + 135
-    pwm.set_pwm(0, 0, math.ceil(pwm_val))
+    pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
     return
 
 def moveVertical(angle):
     angle = angle + 85
     pwm_val = 2.8235*angle + 135
-    pwm.set_pwm(1, 0, math.ceil(pwm_val))
+    pwm.set_pwm(1, 0, int(math.ceil(pwm_val)))
     return
 
 def moveOrigin():
