@@ -1,7 +1,7 @@
 # OpenCV for tracking/display
+from __future__ import division
 import cv2
 from threading import Thread
-from __future__ import division
 import imutils
 import RPi.GPIO as GPIO
 import Adafruit_PCA9685
