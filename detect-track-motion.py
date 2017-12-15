@@ -116,8 +116,13 @@ def moveHorizontal(angle):
     angle = angle + 85
     pwm_val = 2.835*angle + 95
     #print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
-    print "detecting Target Writing : " + str(int(math.ceil(pwm_val)))
-    pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
+    int_pwm = int(math.ceil(pwm_val))
+    if int_pwm < 210:
+        int_pwm = 210
+    if int_pwm > 420:
+        int_pwm = 420
+    print "detecting Target Writing : " + str(int_pwm)
+    pwm.set_pwm(0, 0, int_pwm)
     return
 
 def moveVertical(angle):
