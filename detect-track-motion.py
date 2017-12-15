@@ -85,10 +85,10 @@ def calcDistanceFromLaser(frame):
 
     return
 
-def moveHorizontal():
+def moveHorizontal(angle):
     return
 
-def moveVertical():
+def moveVertical(angle):
     return
 
 
