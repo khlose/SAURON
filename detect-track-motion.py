@@ -26,10 +26,6 @@ class threadedCamera:
                 return
             (self.grabbed, self.frame) = self.stream.read()
             GlobalFrame = self.frame
-            print "width"
-            print self.stream.get(3)
-            print "height"
-            print self.stream.get(4)
             self.erodeDilate()
 
     def read(self):
@@ -61,11 +57,32 @@ class threadedCamera:
         self.stream.release()
 
 def moveToAlign(left,top,right,bottom):
+    #width 640 height 480
+    horizontal_diff = left - 320
+    degHorizontal = horizontal_diff*5.15/42
+    vertical_diff = top - 240
+    degVertical = vertical_diff*5.15/42
+    #42 pixels = 5.15 deg
+    negFlagH = 1
+    negFlagV = 1
+    if horizontal_diff < 0:
+        negFlagH = -1
+    if vertical_diff < 0:
+        negFlagV = -1
+
+    moveHorizontal(negFlagH*degHorizontal)
+    moveVertical(negFlagV*degVertical)
+
     return
 
 def calcDistanceFromLaser(frame):
-    return 
+    return
 
+def moveHorizontal():
+    return
+
+def moveVertical():
+    return
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
