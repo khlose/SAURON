@@ -104,10 +104,10 @@ def moveToAlign(left,top,right,bottom):
         negFlagH = -1
     if vertical_diff < 0:
         negFlagV = -1
-    print "pixeldiff (H,V)" + horizontal_diff +"," + vertical_diff
+    print "pixeldiff (H,V)" + str(horizontal_diff) +"," + str(vertical_diff)
 
-    print "H:" + degHorizontal
-    print "V:" + degVertical
+    print "H:" + str(degHorizontal)
+    print "V:" + str(degVertical)
 
     moveHorizontal(negFlagH*degHorizontal)
     moveVertical(negFlagV*degVertical)
