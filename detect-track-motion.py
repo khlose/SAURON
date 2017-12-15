@@ -81,17 +81,24 @@ class threadedCamera:
         thresh2 = cv2.dilate(thresh2, dilated, iterations=17)
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2)
+        cv2.circle(thresh2, max_loc, 5, (255, 0, 0), 2)
         cv2.imshow("thres", thresh2)
 
     def readContour(self):
         return self.cnts
+
+    def read_left(self):
+
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2  , mask=mask)
+        return
 
     def reset(self):
         self.back = None
     def release(self):
         self.stream.release()
 
-def moveToAlign(left,top,right,bottom):
+def moveToAlign(left):
     #width 640 height 480
 
     horizontal_diff = left - 320
@@ -202,31 +209,33 @@ if __name__ == '__main__':
                 # If the contour is big enough
 
                 # Set largest contour to first contour
-                largest = 0
-                left = 2000
-                right = 0
-                top = 2000
-                bottom = -1000
+                # largest = 0
+                # left = 2000
+                # right = 0
+                # top = 2000
+                # bottom = -1000
+                #
+                # # coord -x ===== +x
+                # #      -y
+                # #       =
+                # #       =
+                # #      +y
+                #
+                # # For each contour (unit in pixel??)
+                #
+                # for i in range(len(cnts)):
+                #     (x, y, w, h) = cv2.boundingRect(cnts[i])
+                #     if x < left: left = x
+                #     if w > right: right = w
+                #     if y < top: top = y
+                #     if h > bottom: bottom = h
+                #     # create bounding box
 
-                # coord -x ===== +x
-                #      -y
-                #       =
-                #       =
-                #      +y
+                left = 255
 
-                # For each contour (unit in pixel??)
-                for i in range(len(cnts)):
-                    (x, y, w, h) = cv2.boundingRect(cnts[i])
-                    if x < left: left = x
-                    if w > right: right = w
-                    if y < top: top = y
-                    if h > bottom: bottom = h
-                    # create bounding box
-                if(left > 0 and top > 0):
-                    bbox = (int(left), int(top), int(right), int(bottom))
-                    moveToAlign(left,top,right,bottom)
-                    #calcDistanceFromLaser(frame)
-                    status = 'tracking'
+                moveToAlign(left)
+                #calcDistanceFromLaser(frame)
+                status = 'tracking'
 
 
         # If we have been tracking for more than a few seconds
