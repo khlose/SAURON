@@ -2,7 +2,7 @@
 import cv2
 from threading import Thread
 import imutils
-
+import numpy as np
 # change to disable multithread
 multithread = True
 GlobalFrame = None
@@ -47,10 +47,18 @@ class threadedCamera:
 
         GlobalGray = self.gray
 
-        #hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(self.frame,redlower,redupper)
 
-        cv2.imshow("hsv",self.frame)
+        hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
+
+        # define range of blue color in HSV
+        lower_red = np.array([160, 140, 50])
+        upper_red = np.array([180, 255, 255])
+
+        imgThreshHigh = cv2.inRange(hsv, lower_red, upper_red)
+        thresh = imgThreshHigh.copy()
+
+
+        cv2.imshow("hsv",thresh)
 
         blurred = cv2.GaussianBlur(gray, (11, 11), 0)
         thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
