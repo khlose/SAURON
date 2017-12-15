@@ -50,7 +50,7 @@ class threadedCamera:
         #hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(self.frame,redlower,redupper)
 
-        cv2.imshow("hsv",mask)
+        cv2.imshow("hsv",self.frame)
 
         blurred = cv2.GaussianBlur(gray, (11, 11), 0)
         thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
