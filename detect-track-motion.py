@@ -47,6 +47,7 @@ class threadedCamera:
         self.gray = None
         self.cnts = None
         self.stopped = False
+        self.left = 0
 
     def start(self):
         Thread(target=self.update, args=()).start()
@@ -82,17 +83,17 @@ class threadedCamera:
         # Check for contours in our threshold
         _, self.cnts, hierarchy2 = cv2.findContours(thresh2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         _, _, _, max_loc = cv2.minMaxLoc(thresh2)
-        cv2.circle(thresh2, max_loc, 5, (255, 0, 0), 2)
-        print "max loc : " + str(max_loc)
-        cv2.imshow("thres", thresh2)
+        #cv2.circle(thresh2, max_loc, 5, (255, 0, 0), 2)
+        #print "max loc : " + str(max_loc)
+        #cv2.imshow("thres", thresh2)
+        self.left = max_loc[0]
 
     def readContour(self):
         return self.cnts
 
     def read_left(self):
 
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(thresh2)
-        return
+        return self.left
 
     def reset(self):
         self.back = None
@@ -133,20 +134,8 @@ def moveHorizontal(angle):
     pwm.set_pwm(0, 0, int_pwm)
     return
 
-def moveVertical(angle):
-    angle = angle + 85
-    pwm_val = 2.8235*angle + 135
-    #print "pwm_val vert= " + str(int(math.ceil(pwm_val)))
-    int_pwm = int(math.ceil(pwm_val))
-    if int_pwm < 210:
-        int_pwm = 210
-    if int_pwm > 420:
-        int_pwm =420
-    pwm.set_pwm(1, 0, int_pwm)
-    return
-
 def moveOrigin():
-    pwm.set_pwm(0, 0, 375)
+    pwm.set_pwm(0, 0, 360)
     #pwm.set_pwm(1, 0, 375)
     return
 
@@ -207,34 +196,9 @@ if __name__ == '__main__':
             # Check each contour
             if cnts != None and len(cnts) != 0:
 
-                # If the contour is big enough
-
-                # Set largest contour to first contour
-                # largest = 0
-                # left = 2000
-                # right = 0
-                # top = 2000
-                # bottom = -1000
-                #
-                # # coord -x ===== +x
-                # #      -y
-                # #       =
-                # #       =
-                # #      +y
-                #
-                # # For each contour (unit in pixel??)
-                #
-                # for i in range(len(cnts)):
-                #     (x, y, w, h) = cv2.boundingRect(cnts[i])
-                #     if x < left: left = x
-                #     if w > right: right = w
-                #     if y < top: top = y
-                #     if h > bottom: bottom = h
-                #     # create bounding box
-
                 left = 255
 
-                moveToAlign(left)
+                moveToAlign(threadedCamera.read_left())
                 #calcDistanceFromLaser(frame)
                 status = 'tracking'
 
