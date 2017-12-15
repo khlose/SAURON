@@ -7,9 +7,6 @@ import numpy as np
 multithread = True
 GlobalFrame = None
 GlobalGray = None
-redlower = (17,15,100)
-redupper = (50,56,200)
-
 
 class threadedCamera:
     def __init__(self, src=0):
@@ -44,30 +41,6 @@ class threadedCamera:
         self.gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
         # Blur footage to prevent artifacts
         self.gray = cv2.GaussianBlur(gray, (21, 21), 0)
-
-        GlobalGray = self.gray
-
-
-        hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
-
-        # define range of blue color in HSV
-        lower_red = np.array([160, 140, 50])
-        upper_red = np.array([180, 255, 255])
-
-        imgThreshHigh = cv2.inRange(hsv, lower_red, upper_red)
-        thresh = imgThreshHigh.copy()
-
-
-        cv2.imshow("hsv",thresh)
-
-        blurred = cv2.GaussianBlur(gray, (11, 11), 0)
-        thresh = cv2.threshold(blurred, 200, 255, cv2.THRESH_BINARY)[1]
-        thresh = cv2.erode(thresh, None, iterations=2)
-        thresh = cv2.dilate(thresh, None, iterations=4)
-
-
-        #cv2.imshow("gray",gray)
-        #cv2.imshow("filtered",thresh)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
         # Dialate threshold to further reduce error
@@ -105,6 +78,11 @@ def moveToAlign(left,top,right,bottom):
     return
 
 def calcDistanceFromLaser(frame):
+    #getRedLasereDOt
+    _,_,r = cv2.split(frame)
+    (minVal,maxVal,minLoc,maxLoc) = cv2.minMaxLoc(r)
+    xCoord = maxLoc[0]
+
     return
 
 def moveHorizontal():
@@ -112,6 +90,7 @@ def moveHorizontal():
 
 def moveVertical():
     return
+
 
 if __name__ == '__main__':
     # Are we finding motion or tracking
@@ -194,8 +173,8 @@ if __name__ == '__main__':
                     if h > bottom: bottom = h
                     # create bounding box
                 bbox = (int(left), int(top), int(right), int(bottom))
-                #moveToAlign(left,top,right,bottom)
-
+                moveToAlign(left,top,right,bottom)
+                calcDistanceFromLaser(frame)
                 status = 'tracking'
 
 
