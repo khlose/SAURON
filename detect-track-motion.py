@@ -198,7 +198,7 @@ if __name__ == '__main__':
 
                 left = 255
 
-                moveToAlign(threadedCamera.read_left())
+                moveToAlign(threadedVid.read_left())
                 #calcDistanceFromLaser(frame)
                 status = 'tracking'
 
