@@ -105,7 +105,7 @@ def moveToAlign(left,top,right,bottom):
     #print "V:" + str(degVertical)
 
     moveHorizontal(degHorizontal)
-    moveVertical(degVertical)
+    #moveVertical(degVertical)
 
     return
 
@@ -115,13 +115,13 @@ def calcDistanceFromLaser(frame):
     (minVal,maxVal,minLoc,maxLoc) = cv2.minMaxLoc(r)
     xCoord = maxLoc[0]
     #change this
-    moveVertical((xCoord-320)*5.15/42)
+    #moveVertical((xCoord-320)*5.15/42)
     return
 
 def moveHorizontal(angle):
     #print "angle before add: " + str(angle)
     angle = angle + 85
-    pwm_val = 2.835*angle + 135
+    pwm_val = 2.835*angle + 95
     #print "angle: " +str(angle) + "pwm_val_raw" + str(pwm_val) + "pwm_val Hori= " + str(int(math.ceil(pwm_val)))
     pwm.set_pwm(0, 0, int(math.ceil(pwm_val)))
     return
@@ -134,8 +134,8 @@ def moveVertical(angle):
     return
 
 def moveOrigin():
-    pwm.set_pwm(0, 0, 375)
-    pwm.set_pwm(1, 0, 375)
+    pwm.set_pwm(0, 0, 330)
+    #pwm.set_pwm(1, 0, 375)
     return
 
 if __name__ == '__main__':
@@ -220,7 +220,7 @@ if __name__ == '__main__':
                     # create bounding box
                 bbox = (int(left), int(top), int(right), int(bottom))
                 moveToAlign(left,top,right,bottom)
-                calcDistanceFromLaser(frame)
+                #calcDistanceFromLaser(frame)
                 status = 'tracking'
 
 
