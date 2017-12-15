@@ -59,7 +59,7 @@ class threadedCamera:
         thresh = cv2.dilate(thresh, None, iterations=4)
 
 
-        cv2.imshow("gray",gray)
+        #cv2.imshow("gray",gray)
         cv2.imshow("filtered",mask)
 
         thresh2 = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
